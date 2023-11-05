@@ -29,6 +29,17 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 # Set seed
 keras.utils.set_random_seed(33)
 
+dependent_variables = {
+    "Spread": "actual_spread",
+    "Favorite Cover Probability": "favorite_covered",
+    "Over Cover Probability": "over_covered",
+    "Points Total": "total_points"
+}
+
+drop_cols = ([dependent_variables[i] for i in dependent_variables.keys()] +
+             ["level_0", "home_team_name", "home_team_division_name", "away_team_name", "away_team_division_name",
+              "stadium_name", "kickoff_temperature", "kickoff_wind", "kickoff_humidity", "home_score", "away_score"])
+
 
 class NeuralNetworkTrainer:
     """Class to train a neural network"""
@@ -40,16 +51,30 @@ class NeuralNetworkTrainer:
 
         print("Loading data")
         self.data = pd.read_csv(f"{ROOT_PATH}/Data/expanded_data.csv")
-        self.training_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/training_set.csv")
-        self.validation_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/validation_set_set.csv")
-        self.test_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/test_set.csv")
-        # TODO: Define independent/dependent variables, filter dataframes below accordingly
-        self.X_train = self.training_set.drop(["HERE"], axis=1)
-        self.X_validation = self.validation_set.drop(["HERE"], axis=1)
-        self.X_test = self.test_set.drop(["HERE"], axis=1)
-        self.y_train = self.training_set[dependent_variable]
-        self.y_validation = self.validation_set[dependent_variable]
-        self.y_test = self.test_set[dependent_variable]
+        self.training_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/TrainingSet.csv")
+        self.validation_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/ValidationSet.csv")
+        self.test_set = pd.read_csv(f"{ROOT_PATH}/Data/SplitData/TestSet.csv")
+        self.X_train = self.training_set.drop(drop_cols, axis=1)
+        self.X_validation = self.validation_set.drop(drop_cols, axis=1)
+        self.X_test = self.test_set.drop(drop_cols, axis=1)
+        self.y_train = self.training_set[dependent_variables[dependent_variable]]
+        self.y_validation = self.validation_set[dependent_variables[dependent_variable]]
+        self.y_test = self.test_set[dependent_variables[dependent_variable]]
+
+        # Format columns
+        self.X_train["week"] = self.X_train["week"].replace(
+            {"Wildcard": 101, "Division": 102, "Conference": 103, "Superbowl": 104}
+        )
+        self.X_validation["week"] = self.X_validation["week"].replace(
+            {"Wildcard": 101, "Division": 102, "Conference": 103, "Superbowl": 104}
+        )
+        self.X_test["week"] = self.X_test["week"].replace(
+            {"Wildcard": 101, "Division": 102, "Conference": 103, "Superbowl": 104}
+        )
+
+        self.X_train["week"] = pd.to_numeric(self.X_train["week"])
+        self.X_validation["week"] = pd.to_numeric(self.X_validation["week"])
+        self.X_test["week"] = pd.to_numeric(self.X_test["week"])
 
     def train_model(self):
         """Function to train model"""
@@ -58,12 +83,10 @@ class NeuralNetworkTrainer:
         # Spread model hyperparameters
         if self.dependent_variable == 'Spread':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(1024,)),
-                keras.layers.Dense(1024, activation='relu', name='hidden1'),
-                keras.layers.Dense(1024, activation='relu', name='hidden2'),
-                # keras.layers.Dense(1024, activation='relu', name='hidden3'),
-                # keras.layers.Dense(769, activation='relu', name='hidden4'),
-                # keras.layers.Dense(1536, activation='relu', name='hidden5').
+                keras.layers.InputLayer(input_shape=(36,)),
+                keras.layers.Dense(36, activation='relu', name='hidden1'),
+                keras.layers.Dense(36, activation='relu', name='hidden2'),
+                keras.layers.Dense(36, activation='relu', name='hidden3'),
                 keras.layers.Dense(1, name='output')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
@@ -71,12 +94,10 @@ class NeuralNetworkTrainer:
         # Spread model hyperparameters
         elif self.dependent_variable == 'Points Total':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(1024,)),
-                keras.layers.Dense(1024, activation='relu', name='hidden1'),
-                keras.layers.Dense(1024, activation='relu', name='hidden2'),
-                # keras.layers.Dense(1024, activation='relu', name='hidden3'),
-                # keras.layers.Dense(769, activation='relu', name='hidden4'),
-                # keras.layers.Dense(1536, activation='relu', name='hidden5').
+                keras.layers.InputLayer(input_shape=(36,)),
+                keras.layers.Dense(36, activation='relu', name='hidden1'),
+                keras.layers.Dense(36, activation='relu', name='hidden2'),
+                keras.layers.Dense(36, activation='relu', name='hidden3'),
                 keras.layers.Dense(1, name='output')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
@@ -84,26 +105,22 @@ class NeuralNetworkTrainer:
         # Over model hyperparameters
         elif self.dependent_variable == 'Over Probability':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(1024,)),
-                keras.layers.Dense(1024, activation='sigmoid', name='hidden1'),
-                keras.layers.Dense(1024, activation='sigmoid', name='hidden2'),
-                # keras.layers.Dense(1024, activation='sigmoid', name='hidden3'),
-                # keras.layers.Dense(1536, activation='sigmoid', name='hidden4'),
-                # keras.layers.Dense(1536, activation='sigmoid', name='hidden5'),
-                keras.layers.Dense(1, name='output')
+                keras.layers.InputLayer(input_shape=(36,)),
+                keras.layers.Dense(36, activation='relu', name='hidden1'),
+                keras.layers.Dense(36, activation='relu', name='hidden2'),
+                keras.layers.Dense(36, activation='relu', name='hidden3'),
+                keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
         # Favorite cover spread model hyperparameters
         else:
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(1024,)),
-                keras.layers.Dense(1024, activation='sigmoid', name='hidden1'),
-                keras.layers.Dense(1024, activation='sigmoid', name='hidden2'),
-                # keras.layers.Dense(1024, activation='sigmoid', name='hidden3'),
-                # keras.layers.Dense(1536, activation='sigmoid', name='hidden4'),
-                # keras.layers.Dense(1536, activation='sigmoid', name='hidden5'),
-                keras.layers.Dense(1, name='output')
+                keras.layers.InputLayer(input_shape=(36,)),
+                keras.layers.Dense(36, activation='relu', name='hidden1'),
+                keras.layers.Dense(36, activation='relu', name='hidden2'),
+                keras.layers.Dense(36, activation='relu', name='hidden3'),
+                keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 
@@ -120,7 +137,7 @@ class NeuralNetworkTrainer:
         plt.plot(history["val_loss"], label="Val. Loss")
         plt.title(f"{self.dependent_variable} Training Loss")
         plt.legend()
-        plt.savefig(f"{self.model_folder_path}/{self.dependent_variable.replace(' ', '')}TrainingLoss.png")
+        plt.savefig(f"{self.model_folder_path}/TrainingLoss.png")
 
         # Plot training accuracy
         if self.dependent_variable not in {'Spread', 'Points Total'}:
@@ -129,7 +146,7 @@ class NeuralNetworkTrainer:
             plt.plot(history["val_accuracy"], label="Val. Accuracy")
             plt.title(f"{self.dependent_variable} Training Accuracy")
             plt.legend()
-            plt.savefig(f"{self.model_folder_path}/{self.dependent_variable.replace(' ', '')}TrainingAccuracy.png")
+            plt.savefig(f"{self.model_folder_path}/TrainingAccuracy.png")
 
         # Evaluate model
         print(f"Collecting {self.dependent_variable} model performance statistics")
@@ -152,9 +169,9 @@ class NeuralNetworkTrainer:
                                                          self.X_train,
                                                          self.X_validation,
                                                          self.X_test,
-                                                         self.y_train,
-                                                         self.y_validation,
-                                                         self.y_test,
+                                                         self.y_train.tolist(),
+                                                         self.y_validation.tolist(),
+                                                         self.y_test.tolist(),
                                                          best_params=self.best_params
                                                          )
 
@@ -168,7 +185,7 @@ if __name__ == '__main__':
     #  Initialize model trainers
     spread_trainer = NeuralNetworkTrainer("Spread")
     favorite_cover_trainer = NeuralNetworkTrainer("Favorite Cover Probability")
-    over_trainer = NeuralNetworkTrainer("Over Probability")
+    over_trainer = NeuralNetworkTrainer("Over Cover Probability")
     total_trainer = NeuralNetworkTrainer("Points Total")
 
     # Train BigModels

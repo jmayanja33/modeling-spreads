@@ -72,7 +72,7 @@ def calculate_performance_metrics_regression(model_type, dependent_variable, mod
 
     # Write evaluation stats to a file
     folder_path = create_model_folder(model_type, dependent_variable)
-    file = open(f"{folder_path}/{dependent_variable.replace(' ', '')}Stats.txt", 'w')
+    file = open(f"{folder_path}/ModelEvaluationStats.txt", 'w')
     file.write(f"""\n- Selected Features: {significant_feature_names}
         \n- Best Params: {best_params}
         \n- Training RMSE: {train_rmse}\n- Training R-Squared: {train_r2}\n- Training Adj. R-squared: {train_adj_r2}
@@ -102,11 +102,12 @@ def calculate_performance_metrics_classification(model_type, dependent_variable,
     """
 
     # Make predictions
-    train_predictions = model.predict(X_train)
-    validation_predictions = model.predict(X_validation)
-    test_predictions = model.predict(X_test)
+    train_predictions = model.predict(X_train).round(decimals=0)
+    validation_predictions = model.predict(X_validation).round(decimals=0)
+    test_predictions = model.predict(X_test).round(decimals=0)
 
     # Calculate Accuracy
+    # TODO: Round predictions to a value of 0 or 1
     train_accuracy = accuracy_score(y_train, train_predictions)
     validation_accuracy = accuracy_score(y_validation, validation_predictions)
     test_accuracy = accuracy_score(y_test, test_predictions)
@@ -126,10 +127,9 @@ def calculate_performance_metrics_classification(model_type, dependent_variable,
     validation_f1 = f1_score(y_validation, validation_predictions)
     test_f1 = f1_score(y_test, test_predictions)
 
-
     # Write evaluation stats to a file
     folder_path = create_model_folder(model_type, dependent_variable)
-    file = open(f"{folder_path}/{dependent_variable.replace(' ', '')}Stats.txt", 'w')
+    file = open(f"{folder_path}/ModelEvaluationStats.txt", 'w')
     file.write(f"""\n- Selected Features: {significant_feature_names}
         \n- Best Params: {best_params}
         \n- Training Accuracy: {train_accuracy}\n- Training Precision: {train_precision}\n- Training Recall: {train_recall}\n- Training F1 Score: {train_f1}

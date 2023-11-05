@@ -287,11 +287,16 @@ class Simulator:
             stadium_latitude = stadiums[stadium_name]["latitude"]
             stadium_longitude = stadiums[stadium_name]["longitude"]
             # stadium_azimuth_angle = stadiums[stadium_name]["azimuth_angle"]
-            stadium_elevation = stadiums[stadium_name]["elevation"]
+            # stadium_elevation = stadiums[stadium_name]["elevation"]
             neutral_site = check_for_neutral_site(week_data["stadium_neutral"][i])
-            kickoff_temperature = week_data["weather_temperature"][i]
-            kickoff_wind = week_data["weather_wind_mph"][i]
-            kickoff_humidity = week_data["weather_humidity"][i]
+            if stadium_roof_type == 0:
+                kickoff_temperature = 70
+                kickoff_wind = 0
+                kickoff_humidity = 0
+            else:
+                kickoff_temperature = week_data["weather_temperature"][i]
+                kickoff_wind = week_data["weather_wind_mph"][i]
+                kickoff_humidity = week_data["weather_humidity"][i]
 
             # Save game data
             game_data = (year, week, playoff_game, home_team_name, home_team_division_name, home_team_id,
@@ -302,7 +307,7 @@ class Simulator:
                          away_team_over_cover, away_team_division_place, away_score, away_team_points_for,
                          away_team_points_against, favorite, given_spread, given_total, stadium_name, stadium_id,
                          stadium_city, stadium_open_date, stadium_roof_type, stadium_weather_type, stadium_capacity,
-                         stadium_surface, stadium_latitude, stadium_longitude, stadium_elevation,
+                         stadium_surface, stadium_latitude, stadium_longitude,
                          neutral_site, kickoff_temperature, kickoff_wind, kickoff_humidity, actual_spread,
                          favorite_covered, over_covered, total_points)
 
@@ -392,7 +397,7 @@ class Simulator:
             "away_team_over_cover", "away_team_division_place", "away_score", "away_team_points_for",
             "away_team_points_against", "favorite", "given_spread", "given_total", "stadium_name", "stadium_id",
             "stadium_city", "stadium_open_date", "stadium_roof_type", "stadium_weather_type", "stadium_capacity",
-            "stadium_surface", "stadium_latitude", "stadium_longitude", "stadium_elevation",
+            "stadium_surface", "stadium_latitude", "stadium_longitude",
             "neutral_site", "kickoff_temperature", "kickoff_wind", "kickoff_humidity", "actual_spread",
             "favorite_covered", "over_covered", "total_points"
         ]
