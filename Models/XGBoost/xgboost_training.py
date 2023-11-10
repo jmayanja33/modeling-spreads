@@ -79,8 +79,6 @@ class XGBoostTrainer:
         self.X_validation["week"] = pd.to_numeric(self.X_validation["week"])
         self.X_test["week"] = pd.to_numeric(self.X_test["week"])
 
-        # TODO: Fill missing temperature values from pro weather api
-
     def evaluate_threshold(self, thresh, model_thresholds, num_thresholds, predictions, file_name, counter, classification=False):
         """Function to evaluate a model threshold"""
         if not classification:

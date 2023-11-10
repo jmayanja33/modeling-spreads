@@ -83,32 +83,32 @@ class NeuralNetworkTrainer:
         # Spread model hyperparameters
         if self.dependent_variable == 'Spread':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(36,)),
-                keras.layers.Dense(36, activation='relu', name='hidden1'),
-                keras.layers.Dense(36, activation='relu', name='hidden2'),
-                keras.layers.Dense(36, activation='relu', name='hidden3'),
-                keras.layers.Dense(1, name='output')
+                keras.layers.InputLayer(input_shape=(94,)),
+                keras.layers.Dense(94, activation='relu', name='hidden1'),
+                keras.layers.Dense(94, activation='relu', name='hidden2'),
+                keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Dense(1, name='output', activation='linear')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
 
         # Spread model hyperparameters
         elif self.dependent_variable == 'Points Total':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(36,)),
-                keras.layers.Dense(36, activation='relu', name='hidden1'),
-                keras.layers.Dense(36, activation='relu', name='hidden2'),
-                keras.layers.Dense(36, activation='relu', name='hidden3'),
-                keras.layers.Dense(1, name='output')
+                keras.layers.InputLayer(input_shape=(94,)),
+                keras.layers.Dense(94, activation='relu', name='hidden1'),
+                keras.layers.Dense(94, activation='relu', name='hidden2'),
+                keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Dense(1, name='output', activation='linear')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
 
         # Over model hyperparameters
         elif self.dependent_variable == 'Over Probability':
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(36,)),
-                keras.layers.Dense(36, activation='relu', name='hidden1'),
-                keras.layers.Dense(36, activation='relu', name='hidden2'),
-                keras.layers.Dense(36, activation='relu', name='hidden3'),
+                keras.layers.InputLayer(input_shape=(94,)),
+                keras.layers.Dense(94, activation='relu', name='hidden1'),
+                keras.layers.Dense(94, activation='relu', name='hidden2'),
+                keras.layers.Dense(94, activation='relu', name='hidden3'),
                 keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -116,10 +116,10 @@ class NeuralNetworkTrainer:
         # Favorite cover spread model hyperparameters
         else:
             model = keras.Sequential([
-                keras.layers.InputLayer(input_shape=(36,)),
-                keras.layers.Dense(36, activation='relu', name='hidden1'),
-                keras.layers.Dense(36, activation='relu', name='hidden2'),
-                keras.layers.Dense(36, activation='relu', name='hidden3'),
+                keras.layers.InputLayer(input_shape=(94,)),
+                keras.layers.Dense(94, activation='relu', name='hidden1'),
+                keras.layers.Dense(94, activation='relu', name='hidden2'),
+                keras.layers.Dense(94, activation='relu', name='hidden3'),
                 keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])

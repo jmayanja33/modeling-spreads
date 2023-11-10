@@ -6,6 +6,39 @@ import pandas as pd
 from root_path import ROOT_PATH
 from divisions import *
 from stadiums import stadiums
+from Scrapers.nfl_stats_api import NFLStats
+
+
+columns = [
+    'year', 'week', 'playoff_game', 'home_team_name', 'home_team_division_name', 'home_team_id',
+    'home_team_division_id', 'home_score', 'away_team_name', 'away_team_division_name', 'away_team_id',
+    'away_team_division_id', 'away_score', 'favorite', 'given_spread', 'given_total', 'stadium_name',
+    'stadium_id', 'stadium_city', 'stadium_open_date', 'stadium_roof_type', 'stadium_weather_type',
+    'stadium_capacity', 'stadium_surface', 'stadium_latitude', 'stadium_longitude', 'neutral_site',
+    'actual_spread', 'favorite_covered', 'over_covered', 'total_points', 'kickoff_temperature',
+    'kickoff_wind', 'kickoff_humidity', 'home_team_wins', 'home_team_losses', 'home_team_tie',
+    'home_team_division_place', 'home_team_points_for', 'home_team_points_against', 'home_team_cover',
+    'home_team_fail_cover', 'home_team_over_cover', 'home_team_under_cover', 'away_team_wins',
+    'away_team_losses', 'away_team_tie', 'away_team_division_place', 'away_team_points_for',
+    'away_team_points_against', 'away_team_cover', 'away_team_fail_cover', 'away_team_over_cover',
+    'away_team_under_cover', 'home_team_completions', 'home_team_attempts', 'home_team_passing_yards',
+    'home_team_passing_tds', 'home_team_interceptions', 'home_team_sacks', 'home_team_sack_yards',
+    'home_team_sack_fumbles', 'home_team_sack_fumbles_lost', 'home_team_passing_air_yards',
+    'home_team_passing_yards_after_catch', 'home_team_passing_first_downs', 'home_team_passing_epa',
+    'home_team_passing_two_point_conversions', 'home_team_carries', 'home_team_rushing_yards', 'home_team_rushing_tds',
+    'home_team_rushing_fumbles', 'home_team_rushing_fumbles_lost', 'home_team_rushing_first_downs',
+    'home_team_rushing_epa', 'home_team_rushing_two_point_conversions', 'home_team_receiving_fumbles',
+    'home_team_receiving_fumbles_lost', 'home_team_special_teams_tds', 'home_team_fantasy_points',
+    'home_team_fantasy_points_ppr', 'away_team_completions', 'away_team_attempts', 'away_team_passing_yards',
+    'away_team_passing_tds', 'away_team_interceptions', 'away_team_sacks', 'away_team_sack_yards',
+    'away_team_sack_fumbles', 'away_team_sack_fumbles_lost', 'away_team_passing_air_yards',
+    'away_team_passing_yards_after_catch', 'away_team_passing_first_downs', 'away_team_passing_epa',
+    'away_team_passing_two_point_conversions', 'away_team_carries', 'away_team_rushing_yards', 'away_team_rushing_tds',
+    'away_team_rushing_fumbles', 'away_team_rushing_fumbles_lost', 'away_team_rushing_first_downs',
+    'away_team_rushing_epa', 'away_team_rushing_two_point_conversions', 'away_team_receiving_fumbles',
+    'away_team_receiving_fumbles_lost', 'away_team_special_teams_tds', 'away_team_fantasy_points',
+    'away_team_fantasy_points_ppr'
+]
 
 
 def check_for_playoff(value):
@@ -69,6 +102,7 @@ class Simulator:
         self.end_season = end_season
         self.simulated_data = []
         self.division_standings = None
+        self.nfl_stats = NFLStats()
 
     def check_for_clinched_playoffs(self, team):
         """Function to check if a team has clinched a playoff spot"""
@@ -129,16 +163,20 @@ class Simulator:
             if favorite == home_team_id:
                 if away_score - home_score > given_spread:
                     home_team_record["cover"] += 1
+                    away_team_record["fail cover"] += 1
                 elif away_score - home_score < given_spread:
                     away_team_record["cover"] += 1
+                    home_team_record["fail cover"] += 1
                 else:
                     home_team_record["cover"] += 1
                     away_team_record["cover"] += 1
             else:
                 if home_score - away_score > given_spread:
                     away_team_record["cover"] += 1
+                    home_team_record["fail cover"] += 1
                 elif home_score - away_score < given_spread:
                     home_team_record["cover"] += 1
+                    away_team_record["fail cover"] += 1
                 else:
                     home_team_record["cover"] += 1
                     away_team_record["cover"] += 1
@@ -147,6 +185,9 @@ class Simulator:
             if over_covered == 1:
                 home_team_record["over cover"] += 1
                 away_team_record["over cover"] += 1
+            else:
+                home_team_record["fail over cover"] += 1
+                away_team_record["fail over cover"] += 1
 
             # Track points
             home_team_record["points for"] += home_score
@@ -243,7 +284,9 @@ class Simulator:
             home_team_losses = self.division_standings[home_team_division_name][home_team_name]["loss"]
             home_team_tie = self.division_standings[home_team_division_name][home_team_name]["tie"]
             home_team_cover = self.division_standings[home_team_division_name][home_team_name]["cover"]
+            home_team_fail_cover = self.division_standings[home_team_division_name][home_team_name]["fail cover"]
             home_team_over_cover = self.division_standings[home_team_division_name][home_team_name]["over cover"]
+            home_team_under_cover = self.division_standings[home_team_division_name][home_team_name]["fail over cover"]
             home_team_division_place = self.division_standings[home_team_division_name][home_team_name]["place"]
             home_team_points_for = self.division_standings[home_team_division_name][home_team_name]["points for"]
             home_team_points_against = self.division_standings[home_team_division_name][home_team_name]["points against"]
@@ -259,7 +302,9 @@ class Simulator:
             away_team_losses = self.division_standings[away_team_division_name][away_team_name]["loss"]
             away_team_tie = self.division_standings[away_team_division_name][away_team_name]["tie"]
             away_team_cover = self.division_standings[away_team_division_name][away_team_name]["cover"]
+            away_team_fail_cover = self.division_standings[away_team_division_name][away_team_name]["fail cover"]
             away_team_over_cover = self.division_standings[away_team_division_name][away_team_name]["over cover"]
+            away_team_under_cover = self.division_standings[away_team_division_name][away_team_name]["fail over cover"]
             away_team_division_place = self.division_standings[away_team_division_name][away_team_name]["place"]
             away_team_points_for = self.division_standings[away_team_division_name][away_team_name]["points for"]
             away_team_points_against = self.division_standings[away_team_division_name][away_team_name]["points against"]
@@ -299,17 +344,23 @@ class Simulator:
                 kickoff_humidity = week_data["weather_humidity"][i]
 
             # Save game data
-            game_data = (year, week, playoff_game, home_team_name, home_team_division_name, home_team_id,
-                         home_team_division_id, home_team_wins, home_team_losses, home_team_tie, home_team_cover,
-                         home_team_over_cover, home_team_division_place, home_score, home_team_points_for,
-                         home_team_points_against, away_team_name, away_team_division_name, away_team_id,
-                         away_team_division_id, away_team_wins, away_team_losses, away_team_tie, away_team_cover,
-                         away_team_over_cover, away_team_division_place, away_score, away_team_points_for,
-                         away_team_points_against, favorite, given_spread, given_total, stadium_name, stadium_id,
-                         stadium_city, stadium_open_date, stadium_roof_type, stadium_weather_type, stadium_capacity,
-                         stadium_surface, stadium_latitude, stadium_longitude,
-                         neutral_site, kickoff_temperature, kickoff_wind, kickoff_humidity, actual_spread,
-                         favorite_covered, over_covered, total_points)
+            simulated_data = [year, week, playoff_game, home_team_name, home_team_division_name, home_team_id,
+                              home_team_division_id, home_score, away_team_name, away_team_division_name, away_team_id,
+                              away_team_division_id, away_score, favorite, given_spread, given_total, stadium_name,
+                              stadium_id, stadium_city, stadium_open_date, stadium_roof_type, stadium_weather_type,
+                              stadium_capacity, stadium_surface, stadium_latitude, stadium_longitude, neutral_site,
+                              actual_spread, favorite_covered, over_covered, total_points, kickoff_temperature,
+                              kickoff_wind, kickoff_humidity, home_team_wins, home_team_losses, home_team_tie,
+                              home_team_division_place, home_team_points_for, home_team_points_against, home_team_cover,
+                              home_team_fail_cover, home_team_over_cover, home_team_under_cover, away_team_wins,
+                              away_team_losses, away_team_tie, away_team_division_place, away_team_points_for,
+                              away_team_points_against, away_team_cover, away_team_fail_cover, away_team_over_cover,
+                              away_team_under_cover]
+
+            home_team_stats = self.nfl_stats.extract_season_stats(team_abbreviations[home_team_name], week, playoff_week)
+            away_team_stats = self.nfl_stats.extract_season_stats(team_abbreviations[away_team_name], week, playoff_week)
+
+            game_data = simulated_data + home_team_stats + away_team_stats
 
             self.simulated_data.append(game_data)
 
@@ -363,7 +414,8 @@ class Simulator:
         teams = set(season_data["team_home"].unique()).intersection(set(season_data["team_home"].unique()))
         for team in teams:
             team_division = divisions[team]
-            self.division_standings[team_division][team] = {"win": 0, "loss": 0, "tie": 0, "cover": 0, "over cover": 0,
+            self.division_standings[team_division][team] = {"win": 0, "loss": 0, "tie": 0, "cover": 0, "fail cover": 0,
+                                                            "over cover": 0, "fail over cover": 0,
                                                             "division win": 0, "division loss": 0, "division tie": 0,
                                                             "points for": 0, "points against": 0, "place": 1,
                                                             "teams beaten": {}}
@@ -378,6 +430,7 @@ class Simulator:
 
         for week in weeks:
             print(f"Simulating data for {year} Season, Week {week}")
+            self.nfl_stats.update_season_data(year)
             self.simulate_week(season_data, week)
 
     def simulate_all_seasons(self):
@@ -387,20 +440,6 @@ class Simulator:
         for i in range(self.start_season, self.end_season):
             print(f"Simulating games for season: {i}")
             self.simulate_season(i)
-
-        columns = [
-            "year", "week", "playoff_game", "home_team_name", "home_team_division_name", "home_team_id",
-            "home_team_division_id", "home_team_wins", "home_team_losses", "home_team_tie", "home_team_cover",
-            "home_team_over_cover", "home_team_division_place", "home_score", "home_team_points_for",
-            "home_team_points_against", "away_team_name", "away_team_division_name", "away_team_id",
-            "away_team_division_id", "away_team_wins", "away_team_losses", "away_team_tie", "away_team_cover",
-            "away_team_over_cover", "away_team_division_place", "away_score", "away_team_points_for",
-            "away_team_points_against", "favorite", "given_spread", "given_total", "stadium_name", "stadium_id",
-            "stadium_city", "stadium_open_date", "stadium_roof_type", "stadium_weather_type", "stadium_capacity",
-            "stadium_surface", "stadium_latitude", "stadium_longitude",
-            "neutral_site", "kickoff_temperature", "kickoff_wind", "kickoff_humidity", "actual_spread",
-            "favorite_covered", "over_covered", "total_points"
-        ]
 
         # Save new data to csv file
         print("Saving data to file")
