@@ -1,0 +1,1 @@
+{'stadium_longitude': '0.09634611'}

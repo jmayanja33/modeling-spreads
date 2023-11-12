@@ -1,0 +1,1 @@
+{'away_team_tie': '0.069342986', 'stadium_longitude': '0.044900686', 'away_team_wins': '0.034763344', 'stadium_latitude': '0.03154807', 'home_team_points_against': '0.031068416', 'stadium_weather_type': '0.030965567', 'favorite': '0.030906161', 'away_team_points_against': '0.030570718', 'given_spread': '0.03049696'}
