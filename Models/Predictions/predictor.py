@@ -1,14 +1,11 @@
-from Scrapers.nfl_stats_api import NFLStats
-from Simulator.stadiums import stadiums
-from Simulator.divisions import teams, divisions, division_ids
+from Scrapers import NFLStats
+from tensorflow import keras
 
 
 class Predictor:
 
     def __init__(self, week, home_team, away_team, favorite, given_spread, given_total, stadium, playoff=0,
                  neutral_site=0):
-        self.model = None
-
         self.nfl = NFLStats()
         self.nfl.update_season_data(season=2023)
 
@@ -17,16 +14,24 @@ class Predictor:
 
     def predict_spread(self):
         """Function to predict spread"""
-        raise NotImplementedError
+        model = keras.models.load_model("Models/NeuralNetwork/Spread/SpreadSavedModel")
+        prediction = round(model.predict(self.data), 0)
+        return prediction
 
     def predict_favorite_to_cover(self):
         """Function to predict if favorite covers"""
-        raise NotImplementedError
+        model = keras.models.load_model("Models/NeuralNetwork/FavoriteCoverProbability/FavoriteCoverProbabilitySavedModel")
+        prediction = round(model.predict(self.data), 4)
+        return prediction
 
     def predict_total_points(self):
         """Function to predict total points"""
-        raise NotImplementedError
+        model = keras.models.load_model("Models/NeuralNetwork/PointsTotal/PointsTotalSavedModel")
+        prediction = round(model.predict(self.data), 0)
+        return prediction
 
     def predict_over_to_cover(self):
         """Function to predict if over covers"""
-        raise NotImplementedError
+        model = keras.models.load_model("Models/NeuralNetwork/OverCoverProbability/OverCoverProbabilitySavedModel")
+        prediction = round(model.predict(self.data), 4)
+        return prediction

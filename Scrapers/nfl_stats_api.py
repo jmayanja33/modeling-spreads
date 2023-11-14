@@ -2,9 +2,8 @@ import nfl_data_py as nfl
 import requests
 import os
 import pandas as pd
-from Simulator.divisions import team_abbreviations, team_markets, teams, division_ids, divisions
-from Simulator.stadiums import stadiums
-from Simulator.simulator import columns
+from Simulator import *
+
 
 group_cols = ["recent_team", "season_type", "week"]
 

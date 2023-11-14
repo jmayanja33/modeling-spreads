@@ -2,22 +2,30 @@ version: '3.9'
 
 services:
 
-  project-dashboard:
-    container_name: project-dashboard
+  project-postgres:
+    container_name: project-postgres
     hostname: team-176-project
     image: postgres
     volumes:
       - ./volume:/var/lib/postgresql
     environment:
-      - POSTGRES_DB=udemy
+      - POSTGRES_DB=team-176-project
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=password
-#    env_file:
-#      -./postgres.env
-#    networks:
-#      - udemy-api-network
     ports:
       - 5432:5432
+    expose:
+      - 5432:5432
+    restart: unless-stopped
+
+  project-adminer:
+    container_name: project-adminer
+    hostname: team-176-project
+    image: adminer
+    ports:
+      - 8080:8080
+    expose:
+      - 8080:8080
     restart: unless-stopped
 
   project-models:
@@ -25,13 +33,11 @@ services:
     hostname: team-176-project
     build:
       context: .
-      dockerfile: ./
-#      context: ./Folder  # path to dockerfile
-#      dockerfile: Dockerfile-dev # Dockerfile to use if not named dockerfile
+      dockerfile: Dockerfile
     ports:
-      - 5000:5000
+      - 3300:3300
+    expose:
+      - 3300:3300
     volumes:
-      - ../app:/var/lib/app
+      - ./app:/var/lib/app
     restart: unless-stopped
-#    depends_on:
-#      - udemy-postgres

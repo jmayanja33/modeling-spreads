@@ -1,0 +1,20 @@
+
+- Selected Features: None
+        
+- Best Params: {'gamma': 4, 'learning_rate': 0.2, 'max_depth': 4, 'n_estimators': 100}
+        
+- Training Accuracy: 0.6383329408994585
+- Training Precision: 0.6542455711667685
+- Training Recall: 0.5247427731504165
+- Training F1 Score: 0.5823817292006526
+        
+- Validation Accuracy: 0.5314285714285715
+- Validation Precision: 0.51171875
+- Validation Recall: 0.39221556886227543
+- Validation F1 Score: 0.4440677966101695
+        
+- Test Accuracy: 0.4949784791965567
+- Test Precision: 0.5019011406844106
+- Test Recall: 0.37393767705382436
+- Test F1 Score: 0.42857142857142855
+        

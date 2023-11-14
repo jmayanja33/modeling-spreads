@@ -2,11 +2,10 @@ import os
 from flask import Flask
 from flask_smorest import Api
 from db import db
-import Tables
-from Resources.model_prediction import ModelPredictionBlueprint
+from Resources import ModelPredictionBlueprint
 
 
-def create_app(db_url=None):
+def create_app(db_url="127.0.0.1"):
     app = Flask(__name__)
 
     app.config["PROPAGATE_EXCEPTIONS"] = True
