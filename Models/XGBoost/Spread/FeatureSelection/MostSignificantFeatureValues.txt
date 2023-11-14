@@ -1,1 +1,1 @@
-{'stadium_longitude': '0.09634611'}
+{'given_spread': '0.03296222'}

@@ -2,7 +2,9 @@ import nfl_data_py as nfl
 import requests
 import os
 import pandas as pd
-from Simulator.divisions import team_abbreviations, team_markets
+from Simulator.divisions import team_abbreviations, team_markets, teams, division_ids, divisions
+from Simulator.stadiums import stadiums
+from Simulator.simulator import columns
 
 group_cols = ["recent_team", "season_type", "week"]
 
@@ -167,7 +169,7 @@ class NFLStats:
 
         return [spread_wins, spread_losses, over_wins, over_losses]
 
-    def compile_all_stats(self, team_name, week, playoff):
+    def compile_team_stats(self, team_name, week, playoff):
         """Function to compile home team standings, betting, and statistical data"""
         standing_data = self.find_standing_data(team_name)
         betting_data = self.find_betting_data(team_name)
@@ -175,3 +177,39 @@ class NFLStats:
 
         compiled_data = standing_data + betting_data + statistical_data
         return compiled_data
+
+    def collect_data_for_predictions(self, week, home_team, away_team, favorite, given_spread,
+                                     given_total, stadium, playoff, neutral_site):
+        """Function to collect data to feed models"""
+
+        # Format provided general data about the game
+        home_team_id = teams[home_team]
+        away_team_id = teams[away_team]
+
+        home_team_division_id = division_ids[divisions[home_team]]
+        away_team_division_id = division_ids[divisions[away_team]]
+
+        favorite_id = teams[favorite]
+
+        stadium_id = stadiums[stadium]['id']
+        stadium_city = stadiums[stadium]["city"]
+        stadium_open_date = stadiums[stadium]["open_date"]
+        stadium_roof_type = stadiums[stadium]["roof_type"]
+        stadium_weather_type = stadiums[stadium]["weather_type"]
+        stadium_capacity = stadiums[stadium]["capacity"]
+        stadium_surface = stadiums[stadium]["surface"]
+        stadium_latitude = stadiums[stadium]["latitude"]
+        stadium_longitude = stadiums[stadium]["longitude"]
+
+        general_data = [self.season, week, home_team_id, home_team_division_id, away_team_id, away_team_division_id,
+                        favorite_id, given_spread, given_total, stadium_id, stadium_city, stadium_open_date,
+                        stadium_roof_type, stadium_weather_type, stadium_capacity, stadium_surface, stadium_latitude,
+                        stadium_longitude, neutral_site]
+
+        # Collect home/away team season statistics
+        home_team_stats = self.compile_team_stats(home_team, week, playoff)
+        away_team_stats = self.compile_team_stats(away_team, week, playoff)
+
+        # Combine and return data as data frame
+        data = general_data + home_team_stats + away_team_stats
+        return pd.DataFrame(data, columns=columns)

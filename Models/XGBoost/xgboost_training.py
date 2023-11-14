@@ -239,7 +239,7 @@ class XGBoostTrainer:
 
             # Evaluate model
             print(f"Collecting model {self.dependent_variable} performance statistics")
-            calculate_performance_metrics_regression('NeuralNetwork',
+            calculate_performance_metrics_regression('XGBoost',
                                                      self.dependent_variable,
                                                      model,
                                                      self.X_train,
@@ -257,7 +257,7 @@ class XGBoostTrainer:
 
             # Evaluate model
             print(f"Collecting model {self.dependent_variable} performance statistics")
-            calculate_performance_metrics_classification('NeuralNetwork',
+            calculate_performance_metrics_classification('XGBoost',
                                                          self.dependent_variable,
                                                          model,
                                                          self.X_train,
@@ -287,7 +287,7 @@ if __name__ == '__main__':
     points_total_trainer = XGBoostTrainer("Points Total")
 
     # Train BigModels
-    # spread_trainer.create_model()
+    spread_trainer.create_model()
     favorite_cover_trainer.create_model()
     over_trainer.create_model()
     points_total_trainer.create_model()

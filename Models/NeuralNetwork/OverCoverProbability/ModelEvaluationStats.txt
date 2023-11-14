@@ -1,20 +1,20 @@
 
 - Selected Features: None
         
-- Best Params: None
+- Best Params: {'gamma': 2, 'learning_rate': 0.6, 'max_depth': 9, 'n_estimators': 100}
         
-- Training Accuracy: 0.4947021426889569
-- Training Precision: 0.3333333333333333
-- Training Recall: 0.0009328358208955224
-- Training F1 Score: 0.0018604651162790697
+- Training Accuracy: 0.8766187897339298
+- Training Precision: 0.8806390977443609
+- Training Recall: 0.8740671641791045
+- Training F1 Score: 0.8773408239700374
         
-- Validation Accuracy: 0.5185714285714286
-- Validation Precision: 0.5
-- Validation Recall: 0.002967359050445104
-- Validation F1 Score: 0.0058997050147492625
+- Validation Accuracy: 0.53
+- Validation Precision: 0.5115606936416185
+- Validation Recall: 0.5252225519287834
+- Validation F1 Score: 0.5183016105417276
         
-- Test Accuracy: 0.5179340028694405
-- Test Precision: 0.0
-- Test Recall: 0.0
-- Test F1 Score: 0.0
+- Test Accuracy: 0.4878048780487805
+- Test Precision: 0.4688427299703264
+- Test Recall: 0.47023809523809523
+- Test F1 Score: 0.46953937592867756
         

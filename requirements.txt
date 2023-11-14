@@ -6,3 +6,9 @@ matplotlib
 tensorflow
 nfl_data_py
 lxml
+flask
+flask-smorest
+python-dotenv
+marshmallow
+sqlalchemy
+flask_sqlalchemy
