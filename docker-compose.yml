@@ -34,10 +34,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: team-176-models
     ports:
-      - 3300:3300
+      - 5000:5000
     expose:
-      - 3300:3300
+      - 5000:5000
     volumes:
       - ./app:/var/lib/app
     restart: unless-stopped

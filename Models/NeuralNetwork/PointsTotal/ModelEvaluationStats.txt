@@ -1,17 +1,17 @@
 
 - Selected Features: None
         
-- Best Params: {'gamma': 1, 'learning_rate': 0.1, 'max_depth': 3, 'n_estimators': 100}
+- Best Params: None
         
-- Training RMSE: 13.451573259621108
-- Training R-Squared: 0.1079697472967448
-- Training Adj. R-squared: 0.10775961060588413
+- Training RMSE: 16.086684136446863
+- Training R-Squared: -0.2757526820068068
+- Training Adj. R-squared: -0.30463532943181626
         
-- Validation RMSE: 13.226202907022715
-- Test R-squared: 0.07383447449126901
-- Test Adj R-Squared: 0.07250758978423644
+- Validation RMSE: 15.662217006763747
+- Test R-squared: -0.2987474958785672
+- Test Adj R-Squared: -0.5005363630068074
         
-- Test RMSE: 13.074509174608199
-- Test R-squared: 0.09764541446244113
-- Test Adj R-Squared: 0.09634706254080438
+- Test RMSE: 15.852467643243255
+- Test R-squared: -0.32653951769036405
+- Test Adj R-Squared: -0.5336735952034772
         

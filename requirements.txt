@@ -12,3 +12,4 @@ python-dotenv
 marshmallow
 sqlalchemy
 flask_sqlalchemy
+psycopg2

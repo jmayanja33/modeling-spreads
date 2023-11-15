@@ -2,8 +2,38 @@ import nfl_data_py as nfl
 import requests
 import os
 import pandas as pd
-from Simulator import *
+from Simulator.stadiums import stadiums
+from Simulator.divisions import division_ids, divisions, teams, team_abbreviations, team_markets
 
+columns = [
+    'year', 'week', 'playoff_game', 'home_team_id',
+    'home_team_division_id', 'away_team_id',
+    'away_team_division_id', 'favorite', 'given_spread', 'given_total',
+    'stadium_id', 'stadium_city', 'stadium_open_date', 'stadium_roof_type', 'stadium_weather_type',
+    'stadium_capacity', 'stadium_surface', 'stadium_latitude', 'stadium_longitude', 'neutral_site',
+    'home_team_wins', 'home_team_losses', 'home_team_tie',
+    'home_team_division_place', 'home_team_points_for', 'home_team_points_against', 'home_team_cover',
+    'home_team_fail_cover', 'home_team_over_cover', 'home_team_under_cover', 'away_team_wins',
+    'away_team_losses', 'away_team_tie', 'away_team_division_place', 'away_team_points_for',
+    'away_team_points_against', 'away_team_cover', 'away_team_fail_cover', 'away_team_over_cover',
+    'away_team_under_cover', 'home_team_completions', 'home_team_attempts', 'home_team_passing_yards',
+    'home_team_passing_tds', 'home_team_interceptions', 'home_team_sacks', 'home_team_sack_yards',
+    'home_team_sack_fumbles', 'home_team_sack_fumbles_lost', 'home_team_passing_air_yards',
+    'home_team_passing_yards_after_catch', 'home_team_passing_first_downs', 'home_team_passing_epa',
+    'home_team_passing_two_point_conversions', 'home_team_carries', 'home_team_rushing_yards', 'home_team_rushing_tds',
+    'home_team_rushing_fumbles', 'home_team_rushing_fumbles_lost', 'home_team_rushing_first_downs',
+    'home_team_rushing_epa', 'home_team_rushing_two_point_conversions', 'home_team_receiving_fumbles',
+    'home_team_receiving_fumbles_lost', 'home_team_special_teams_tds', 'home_team_fantasy_points',
+    'home_team_fantasy_points_ppr', 'away_team_completions', 'away_team_attempts', 'away_team_passing_yards',
+    'away_team_passing_tds', 'away_team_interceptions', 'away_team_sacks', 'away_team_sack_yards',
+    'away_team_sack_fumbles', 'away_team_sack_fumbles_lost', 'away_team_passing_air_yards',
+    'away_team_passing_yards_after_catch', 'away_team_passing_first_downs', 'away_team_passing_epa',
+    'away_team_passing_two_point_conversions', 'away_team_carries', 'away_team_rushing_yards', 'away_team_rushing_tds',
+    'away_team_rushing_fumbles', 'away_team_rushing_fumbles_lost', 'away_team_rushing_first_downs',
+    'away_team_rushing_epa', 'away_team_rushing_two_point_conversions', 'away_team_receiving_fumbles',
+    'away_team_receiving_fumbles_lost', 'away_team_special_teams_tds', 'away_team_fantasy_points',
+    'away_team_fantasy_points_ppr'
+]
 
 group_cols = ["recent_team", "season_type", "week"]
 
@@ -17,7 +47,7 @@ keep_cols = [
 ]
 
 
-class NFLStats:
+class NFLStatsAPI:
     """Class to extract nfl stats by week"""
     def __init__(self):
         self.data = None
@@ -122,7 +152,7 @@ class NFLStats:
 
             # Extract correct team data
             for team in standings:
-                if team["Name"] == team_abbreviations[team_name]:
+                if team["Name"] == team_abbreviations[team_name] or team["Name"] == team_name:
                     wins = team["Wins"]
                     losses = team["Losses"]
                     ties = team["Ties"]
@@ -130,6 +160,7 @@ class NFLStats:
                     points_for = team["PointsFor"]
                     points_against = team["PointsAgainst"]
                     return [wins, losses, ties, place, points_for, points_against]
+            return [0, 0, 0, 0, 0, 0]
 
         except Exception as e:
             print(f"API call failed; Details: {e}")
@@ -145,12 +176,12 @@ class NFLStats:
             team_spread_df = spread_df[spread_df["Team"] == team_markets[team_name]]
             team_spread_df.reset_index(inplace=True, drop=True)
             spread_record = team_spread_df["ATS Record"][0].split("-")
-            spread_wins = spread_record[0] + spread_record[2]
-            spread_losses = spread_record[1]
+            spread_wins = int(spread_record[0]) + int(spread_record[2])
+            spread_losses = int(spread_record[1])
 
         except Exception as e:
             print(f"API call failed; Details: {e}")
-            return [0, 0, 0]
+            return [0, 0, 0, 0]
 
         # Find over data
         try:
@@ -159,12 +190,12 @@ class NFLStats:
             team_points_total_df = point_total_df[point_total_df["Team"] == team_markets[team_name]]
             team_points_total_df.reset_index(inplace=True, drop=True)
             over_record = team_points_total_df["Over Record"][0].split("-")
-            over_wins = over_record[0] + over_record[2]
-            over_losses = over_record[1]
+            over_wins = int(over_record[0]) + int(over_record[2])
+            over_losses = int(over_record[1])
 
         except Exception as e:
             print(f"Points Total Record API call failed; Details: {e}")
-            return [0, 0, 0]
+            return [0, 0, 0, 0]
 
         return [spread_wins, spread_losses, over_wins, over_losses]
 
@@ -172,7 +203,7 @@ class NFLStats:
         """Function to compile home team standings, betting, and statistical data"""
         standing_data = self.find_standing_data(team_name)
         betting_data = self.find_betting_data(team_name)
-        statistical_data = self.extract_season_stats(team_name, week, playoff)
+        statistical_data = self.extract_season_stats(team_abbreviations[team_name], week, playoff)
 
         compiled_data = standing_data + betting_data + statistical_data
         return compiled_data
@@ -200,10 +231,10 @@ class NFLStats:
         stadium_latitude = stadiums[stadium]["latitude"]
         stadium_longitude = stadiums[stadium]["longitude"]
 
-        general_data = [self.season, week, home_team_id, home_team_division_id, away_team_id, away_team_division_id,
-                        favorite_id, given_spread, given_total, stadium_id, stadium_city, stadium_open_date,
-                        stadium_roof_type, stadium_weather_type, stadium_capacity, stadium_surface, stadium_latitude,
-                        stadium_longitude, neutral_site]
+        general_data = [self.season, week, playoff, home_team_id, home_team_division_id, away_team_id,
+                        away_team_division_id, favorite_id, given_spread, given_total, stadium_id, stadium_city,
+                        stadium_open_date, stadium_roof_type, stadium_weather_type, stadium_capacity, stadium_surface,
+                        stadium_latitude, stadium_longitude, neutral_site]
 
         # Collect home/away team season statistics
         home_team_stats = self.compile_team_stats(home_team, week, playoff)
@@ -211,4 +242,5 @@ class NFLStats:
 
         # Combine and return data as data frame
         data = general_data + home_team_stats + away_team_stats
-        return pd.DataFrame(data, columns=columns)
+        df = pd.DataFrame(data=[data], columns=columns)
+        return df

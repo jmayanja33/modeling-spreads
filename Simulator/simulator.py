@@ -4,9 +4,9 @@ Script to simulate every game from all seasons. Extra stats will be extracted fr
 
 import pandas as pd
 from root_path import ROOT_PATH
-from divisions import *
-from stadiums import stadiums
-from Scrapers.nfl_stats_api import NFLStats
+from Simulator.divisions import *
+from Simulator.stadiums import stadiums
+from Scrapers.nfl_statistics_api import NFLStatsAPI
 
 
 columns = [
@@ -102,7 +102,7 @@ class Simulator:
         self.end_season = end_season
         self.simulated_data = []
         self.division_standings = None
-        self.nfl_stats = NFLStats()
+        self.nfl_stats = NFLStatsAPI()
 
     def check_for_clinched_playoffs(self, team):
         """Function to check if a team has clinched a playoff spot"""
@@ -448,6 +448,6 @@ class Simulator:
 
 
 # Main to run simulations
-if __name__ == '__main__':
-    simulator = Simulator()
-    simulator.simulate_all_seasons()
+# if __name__ == '__main__':
+#     simulator = Simulator()
+#     simulator.simulate_all_seasons()

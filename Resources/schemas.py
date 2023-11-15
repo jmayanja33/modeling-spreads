@@ -15,4 +15,3 @@ class PlainModelPredictionSchema(Schema):
 
 class ModelPredictionSchema(PlainModelPredictionSchema):
     id = fields.Int(dump_only=True)
-
