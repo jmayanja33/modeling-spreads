@@ -13,3 +13,6 @@ marshmallow
 sqlalchemy
 flask_sqlalchemy
 psycopg2
+dash
+plotly
+dash_bootstrap_components
