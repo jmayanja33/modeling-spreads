@@ -1,9 +1,5 @@
 from argparse import ArgumentParser
 
-import uvicorn
-from fastapi.middleware.wsgi import WSGIMiddleware
-
-from cse6242_project.api.main import api_app
 from cse6242_project.visuals.dashboard import dashapp
 
 
@@ -26,9 +22,7 @@ def get_user_args():
 
 
 def run(host='127.0.0.1', port=8000):
-    api_app.mount("/", WSGIMiddleware(dashapp.server))
-    uvicorn.run(app=api_app, host=host, port=port)
-
+    dashapp.run(debug=True, host=host, port=port)
 
 def run_cli():
     args = get_user_args()
