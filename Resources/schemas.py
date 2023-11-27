@@ -9,8 +9,10 @@ class PlainModelPredictionSchema(Schema):
     given_total = fields.Float()
     predicted_spread = fields.Float()
     predicted_favorite_cover = fields.Float()
+    probability_predicted_team_cover = fields.Float()
     predicted_total = fields.Float()
     predicted_over_cover = fields.Float()
+    probability_predicted_points_cover = fields.Float()
 
 
 class ModelPredictionSchema(PlainModelPredictionSchema):

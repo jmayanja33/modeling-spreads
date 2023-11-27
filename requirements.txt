@@ -4,6 +4,7 @@ scikit-learn
 xgboost
 matplotlib
 tensorflow
+requests
 nfl_data_py
 lxml
 flask

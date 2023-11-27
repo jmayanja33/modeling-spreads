@@ -11,5 +11,7 @@ class ModelPredictionTable(db.Model):
     given_total = db.Column(db.Float(precision=1), unique=False, nullable=False)
     predicted_spread = db.Column(db.Float(precision=1), unique=False, nullable=False)
     predicted_favorite_cover = db.Column(db.Float(precision=1), unique=False, nullable=False)
+    probability_predicted_team_cover = db.Column(db.Float(precision=1), unique=False, nullable=False)
     predicted_total = db.Column(db.Float(precision=1), unique=False, nullable=False)
     predicted_over_cover = db.Column(db.Float(precision=4), unique=False, nullable=False)
+    probability_predicted_points_cover = db.Column(db.Float(precision=1), unique=False, nullable=False)

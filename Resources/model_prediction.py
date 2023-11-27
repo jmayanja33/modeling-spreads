@@ -3,7 +3,7 @@ from flask_smorest import Blueprint, abort
 from Resources.schemas import ModelPredictionSchema
 from Tables.model_prediction import ModelPredictionTable
 from db import db
-from Models.Predictions.predictor import Predictor
+from predictor import Predictor
 
 
 ModelPredictionBlueprint = Blueprint("Model Predictions", __name__, 
@@ -63,9 +63,9 @@ class ModelPredictionList(MethodView):
 
             # Make predictions
             spread_prediction = predictor.predict_spread()
-            favorite_to_cover_prediction = predictor.predict_favorite_to_cover()
+            favorite_to_cover_prediction, favorite_to_cover_probability = predictor.predict_favorite_to_cover()
             total_points_prediction = predictor.predict_total_points()
-            over_to_cover_prediction = predictor.predict_over_to_cover()
+            over_to_cover_prediction, over_to_cover_probability = predictor.predict_over_to_cover()
 
         except Exception as e:
             abort(500, message=f"An error occurred while generating predictions. Ensure all variables were entered correctly; Details: {e}")
@@ -77,8 +77,10 @@ class ModelPredictionList(MethodView):
             "given_total": formatted_given_total,
             "predicted_spread": spread_prediction,
             "predicted_favorite_cover": favorite_to_cover_prediction,
+            "probability_predicted_team_cover": favorite_to_cover_probability,
             "predicted_total": total_points_prediction,
-            "predicted_over_cover": over_to_cover_prediction
+            "predicted_over_cover": over_to_cover_prediction,
+            "probability_predicted_points_cover": over_to_cover_probability
         }
 
         # Persist data to sql

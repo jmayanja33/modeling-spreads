@@ -3,15 +3,15 @@
         
 - Best Params: None
         
-- Training RMSE: 37.97412376146655
-- Training R-Squared: -6.203704750937151
-- Training Adj. R-squared: -6.366794405703069
+- Training RMSE: 14.300443819081906
+- Training R-Squared: -0.02159654148793555
+- Training Adj. R-squared: -0.04472517224416528
         
-- Validation RMSE: 38.45785549335935
-- Test R-squared: -7.021326998765597
-- Test Adj R-Squared: -8.267615821714301
+- Validation RMSE: 13.908355984246125
+- Test R-squared: -0.049126097894618415
+- Test Adj R-Squared: -0.21213081393113775
         
-- Test RMSE: 38.306597537307596
-- Test R-squared: -6.56525238962582
-- Test Adj R-Squared: -7.746537646477691
+- Test RMSE: 14.043707259173788
+- Test R-squared: -0.016809978981561002
+- Test Adj R-Squared: -0.17558097237735293
         

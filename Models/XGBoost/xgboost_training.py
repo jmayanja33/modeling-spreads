@@ -20,7 +20,7 @@ import warnings
 import pandas as pd
 import numpy as np
 import xgboost as xgb
-from xgboost import XGBRegressor, XGBClassifier
+from xgboost import XGBRegressor
 from numpy import sort
 from sklearn.feature_selection import SelectFromModel
 from sklearn.model_selection import GridSearchCV
@@ -90,7 +90,14 @@ class XGBoostTrainer:
 
         # Accuracy for bet win prediction/over prediction
         else:
-            accuracy = accuracy_score(self.y_validation, predictions)
+            rounded_predictions = []
+            for i in predictions:
+                if i[0] > i[1]:
+                    rounded_predictions.append(0)
+                else:
+                    rounded_predictions.append(1)
+
+            accuracy = accuracy_score(self.y_validation, rounded_predictions)
             model_thresholds[thresh] = accuracy
             # Save to file
             file_name.write(f"\n- Threshold: {thresh}  - Accuracy: {accuracy}")
@@ -123,7 +130,7 @@ class XGBoostTrainer:
         if self.dependent_variable in {'Spread', 'Points Total'}:
             model = XGBRegressor(random_state=33)
         else:
-            model = XGBClassifier(random_state=33)
+            model = XGBRegressor(random_state=33, objective='multi:softprob', num_class=2)
         model.fit(self.X_train, self.y_train)
 
         print("Finding feature significance")
@@ -145,7 +152,7 @@ class XGBoostTrainer:
             if self.dependent_variable in {'Spread', 'Points Total'}:
                 feature_model = XGBRegressor(random_state=33)
             else:
-                feature_model = XGBClassifier(random_state=33)
+                feature_model = XGBRegressor(random_state=33, objective='multi:softprob', num_class=2)
             feature_model.fit(features_X_train, self.y_train)
 
             # Make predictions
@@ -215,14 +222,17 @@ class XGBoostTrainer:
         # Use grid search to perform k-fold cross validation with k=5 to find best parameters
         print("Performing 5 fold cross validation:")
         # Create xgb object
-        if self.dependent_variable in {'Spread', 'Points Total'}:
-            xgb_object = XGBRegressor(random_state=33)
-            params_model = GridSearchCV(estimator=xgb_object, param_grid=param_tuning, scoring="neg_mean_squared_error",
-                                        verbose=10, n_jobs=-1)
-        else:
-            xgb_object = XGBClassifier(random_state=33)
-            params_model = GridSearchCV(estimator=xgb_object, param_grid=param_tuning, scoring="accuracy",
-                                        verbose=10, n_jobs=-1)
+        xgb_object = XGBRegressor(random_state=33)
+        params_model = GridSearchCV(estimator=xgb_object, param_grid=param_tuning, scoring="neg_mean_squared_error",
+                                    verbose=10, n_jobs=-1)
+        # if self.dependent_variable in {'Spread', 'Points Total'}:
+        #     xgb_object = XGBRegressor(random_state=33)
+        #     params_model = GridSearchCV(estimator=xgb_object, param_grid=param_tuning, scoring="neg_mean_squared_error",
+        #                                 verbose=10, n_jobs=-1)
+        # else:
+        #     xgb_object = XGBRegressor(random_state=33)
+        #     params_model = GridSearchCV(estimator=xgb_object, param_grid=param_tuning, scoring="neg_mean_squared_error",
+        #                                 verbose=10, n_jobs=-1)
 
         # Find best params
         params_model.fit(self.X_train, self.y_train)
@@ -248,11 +258,16 @@ class XGBoostTrainer:
                                                      self.y_train,
                                                      self.y_validation,
                                                      self.y_test,
-                                                     best_params=self.best_params
+                                                     best_params=self.best_params,
+                                                     significant_feature_names=self.significant_feature_names
                                                      )
+            # Save Model
+            print(f"Saving {self.dependent_variable} model and performance statistics")
+            model.save_model(f"{self.model_folder_path}/{self.dependent_variable.replace(' ', '')}XGBoostModel.json")
+
         # Bet win probability model
         else:
-            model = XGBClassifier(**self.best_params, random_state=33)
+            model = XGBRegressor(**self.best_params, random_state=33, objective='multi:softprob', num_class=2)
             model.fit(self.X_train, self.y_train)
 
             # Evaluate model
@@ -266,7 +281,8 @@ class XGBoostTrainer:
                                                          self.y_train,
                                                          self.y_validation,
                                                          self.y_test,
-                                                         best_params=self.best_params
+                                                         best_params=self.best_params,
+                                                         significant_feature_names=self.significant_feature_names
                                                          )
 
         # Save Model
@@ -286,7 +302,7 @@ if __name__ == '__main__':
     over_trainer = XGBoostTrainer("Over Cover Probability")
     points_total_trainer = XGBoostTrainer("Points Total")
 
-    # Train BigModels
+    # Train Models
     spread_trainer.create_model()
     favorite_cover_trainer.create_model()
     over_trainer.create_model()

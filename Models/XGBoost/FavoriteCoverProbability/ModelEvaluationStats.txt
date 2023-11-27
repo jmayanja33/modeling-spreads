@@ -1,20 +1,20 @@
 
-- Selected Features: None
+- Selected Features: ['stadium_surface', 'stadium_longitude', 'home_team_fail_cover', 'away_team_points_for', 'home_team_passing_tds', 'home_team_receiving_fumbles', 'home_team_fantasy_points', 'away_team_sack_fumbles_lost', 'away_team_passing_first_downs', 'away_team_passing_two_point_conversions']
         
-- Best Params: {'gamma': 4, 'learning_rate': 0.2, 'max_depth': 4, 'n_estimators': 100}
+- Best Params: {'gamma': 1, 'learning_rate': 0.2, 'max_depth': 3, 'n_estimators': 300}
         
-- Training Accuracy: 0.6383329408994585
-- Training Precision: 0.6542455711667685
-- Training Recall: 0.5247427731504165
-- Training F1 Score: 0.5823817292006526
+- Training Accuracy: 0.590534494937603
+- Training Precision: 0.5816216216216217
+- Training Recall: 0.5271925526702597
+- Training F1 Score: 0.5530711899254691
         
-- Validation Accuracy: 0.5314285714285715
-- Validation Precision: 0.51171875
-- Validation Recall: 0.39221556886227543
-- Validation F1 Score: 0.4440677966101695
+- Validation Accuracy: 0.5171428571428571
+- Validation Precision: 0.4937888198757764
+- Validation Recall: 0.47604790419161674
+- Validation F1 Score: 0.48475609756097565
         
-- Test Accuracy: 0.4949784791965567
-- Test Precision: 0.5019011406844106
-- Test Recall: 0.37393767705382436
-- Test F1 Score: 0.42857142857142855
+- Test Accuracy: 0.533715925394548
+- Test Precision: 0.5463576158940397
+- Test Recall: 0.46742209631728043
+- Test F1 Score: 0.5038167938931298
         

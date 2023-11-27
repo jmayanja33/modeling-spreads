@@ -1,20 +1,20 @@
 
-- Selected Features: None
+- Selected Features: ['year', 'away_team_id', 'stadium_city', 'stadium_open_date', 'stadium_weather_type', 'stadium_surface', 'stadium_latitude', 'home_team_wins', 'home_team_tie', 'home_team_points_for', 'home_team_points_against', 'home_team_fail_cover', 'home_team_under_cover', 'away_team_wins', 'away_team_tie', 'away_team_division_place', 'away_team_points_for', 'away_team_fail_cover', 'away_team_under_cover', 'home_team_completions', 'home_team_attempts', 'home_team_passing_tds', 'home_team_sack_yards', 'home_team_passing_yards_after_catch', 'home_team_passing_first_downs', 'home_team_passing_two_point_conversions', 'home_team_rushing_yards', 'home_team_rushing_tds', 'home_team_rushing_fumbles_lost', 'home_team_rushing_first_downs', 'home_team_fantasy_points', 'home_team_fantasy_points_ppr', 'away_team_completions', 'away_team_attempts', 'away_team_passing_yards', 'away_team_interceptions', 'away_team_sack_fumbles_lost', 'away_team_passing_air_yards', 'away_team_passing_yards_after_catch', 'away_team_passing_first_downs', 'away_team_passing_epa', 'away_team_passing_two_point_conversions', 'away_team_carries', 'away_team_rushing_yards', 'away_team_receiving_fumbles', 'away_team_special_teams_tds', 'away_team_fantasy_points', 'away_team_fantasy_points_ppr']
         
-- Best Params: {'gamma': 2, 'learning_rate': 0.6, 'max_depth': 9, 'n_estimators': 100}
+- Best Params: {'gamma': 2, 'learning_rate': 0.1, 'max_depth': 6, 'n_estimators': 200}
         
-- Training Accuracy: 0.8766187897339298
-- Training Precision: 0.8806390977443609
-- Training Recall: 0.8740671641791045
-- Training F1 Score: 0.8773408239700374
+- Training Accuracy: 0.7066164351306805
+- Training Precision: 0.7018884892086331
+- Training Recall: 0.7280783582089553
+- Training F1 Score: 0.7147435897435898
         
-- Validation Accuracy: 0.53
-- Validation Precision: 0.5115606936416185
-- Validation Recall: 0.5252225519287834
-- Validation F1 Score: 0.5183016105417276
+- Validation Accuracy: 0.5328571428571428
+- Validation Precision: 0.5134408602150538
+- Validation Recall: 0.5667655786350149
+- Validation F1 Score: 0.5387870239774329
         
-- Test Accuracy: 0.4878048780487805
-- Test Precision: 0.4688427299703264
-- Test Recall: 0.47023809523809523
-- Test F1 Score: 0.46953937592867756
+- Test Accuracy: 0.48493543758967
+- Test Precision: 0.46742209631728043
+- Test Recall: 0.49107142857142855
+- Test F1 Score: 0.47895500725689405
         

@@ -87,6 +87,11 @@ class NeuralNetworkTrainer:
                 keras.layers.Dense(94, activation='relu', name='hidden1'),
                 keras.layers.Dense(94, activation='relu', name='hidden2'),
                 keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Dense(94, activation='relu', name='hidden4'),
+                keras.layers.Dense(94, activation='relu', name='hidden5'),
+                keras.layers.Dense(94, activation='relu', name='hidden6'),
+                keras.layers.Dense(94, activation='relu', name='hidden7'),
+                keras.layers.Dense(94, activation='relu', name='hidden8'),
                 keras.layers.Dense(1, name='output', activation='linear')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
@@ -98,6 +103,12 @@ class NeuralNetworkTrainer:
                 keras.layers.Dense(94, activation='relu', name='hidden1'),
                 keras.layers.Dense(94, activation='relu', name='hidden2'),
                 keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Dense(94, activation='relu', name='hidden4'),
+                keras.layers.Dense(94, activation='relu', name='hidden5'),
+                keras.layers.Dense(94, activation='relu', name='hidden6'),
+                keras.layers.Dense(94, activation='relu', name='hidden7'),
+                keras.layers.Dense(94, activation='relu', name='hidden8'),
+                keras.layers.Dense(94, activation='relu', name='hidden9'),
                 keras.layers.Dense(1, name='output', activation='linear')
             ])
             model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mean_squared_error'])
@@ -109,6 +120,13 @@ class NeuralNetworkTrainer:
                 keras.layers.Dense(94, activation='relu', name='hidden1'),
                 keras.layers.Dense(94, activation='relu', name='hidden2'),
                 keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Dense(94, activation='relu', name='hidden4'),
+                keras.layers.Dense(94, activation='relu', name='hidden5'),
+                keras.layers.Dense(94, activation='relu', name='hidden6'),
+                keras.layers.Dense(94, activation='relu', name='hidden7'),
+                keras.layers.Dense(94, activation='relu', name='hidden8'),
+                keras.layers.Dense(94, activation='relu', name='hidden9'),
+                keras.layers.Dense(94, activation='relu', name='hidden10'),
                 keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -117,9 +135,14 @@ class NeuralNetworkTrainer:
         else:
             model = keras.Sequential([
                 keras.layers.InputLayer(input_shape=(94,)),
-                keras.layers.Dense(94, activation='relu', name='hidden1'),
-                keras.layers.Dense(94, activation='relu', name='hidden2'),
-                keras.layers.Dense(94, activation='relu', name='hidden3'),
+                keras.layers.Conv2D(94, kernel_size=(5,5), activation='relu', name='hidden1'),
+                keras.layers.Conv2D(94, kernel_size=(5,5), activation='relu', name='hidden2'),
+                keras.layers.Conv2D(94, kernel_size=(5,5), activation='relu', name='hidden3'),
+                keras.layers.Conv2D(94, kernel_size=(5,5), activation='relu', name='hidden4'),
+                keras.layers.Conv2D(94, kernel_size=(5,5), activation='relu', name='hidden5'),
+                # keras.layers.Conv2D(94, activation='relu', name='hidden6'),
+                # keras.layers.Conv2D(94, activation='relu', name='hidden7'),
+                # keras.layers.Conv2D(94, activation='relu', name='hidden8'),
                 keras.layers.Dense(1, name='output', activation='sigmoid')
             ])
             model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
@@ -189,7 +212,7 @@ if __name__ == '__main__':
     total_trainer = NeuralNetworkTrainer("Points Total")
 
     # Train BigModels
-    spread_trainer.train_model()
+    # spread_trainer.train_model()
     favorite_cover_trainer.train_model()
-    over_trainer.train_model()
-    total_trainer.train_model()
+    # over_trainer.train_model()
+    # total_trainer.train_model()

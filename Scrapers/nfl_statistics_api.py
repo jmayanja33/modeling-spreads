@@ -4,6 +4,7 @@ import os
 import pandas as pd
 from Simulator.stadiums import stadiums
 from Simulator.divisions import division_ids, divisions, teams, team_abbreviations, team_markets
+from dotenv import load_dotenv
 
 columns = [
     'year', 'week', 'playoff_game', 'home_team_id',
@@ -50,6 +51,8 @@ keep_cols = [
 class NFLStatsAPI:
     """Class to extract nfl stats by week"""
     def __init__(self):
+        load_dotenv()
+
         self.data = None
         self.season = None
         self.api_key = os.getenv("SPORTS_DATA_IO_KEY")
@@ -147,12 +150,13 @@ class NFLStatsAPI:
         """Function to get a team's record/standing"""
         # Get standings data for 2023
         try:
+            print(f"Finding standing data for team: {team_name}")
             response = requests.get(f"https://api.sportsdata.io/v3/nfl/scores/json/Standings/2023?key={self.api_key}")
             standings = response.json()
 
             # Extract correct team data
             for team in standings:
-                if team["Name"] == team_abbreviations[team_name] or team["Name"] == team_name:
+                if team["Team"] == team_abbreviations[team_name] or team["Name"] == team_name:
                     wins = team["Wins"]
                     losses = team["Losses"]
                     ties = team["Ties"]
@@ -163,7 +167,7 @@ class NFLStatsAPI:
             return [0, 0, 0, 0, 0, 0]
 
         except Exception as e:
-            print(f"API call failed; Details: {e}")
+            print(f"Standings API call failed; Details: {e}")
             return [0, 0, 0, 0, 0, 0]
 
     def find_betting_data(self, team_name):
@@ -180,7 +184,7 @@ class NFLStatsAPI:
             spread_losses = int(spread_record[1])
 
         except Exception as e:
-            print(f"API call failed; Details: {e}")
+            print(f"Betting Record API call failed; Details: {e}")
             return [0, 0, 0, 0]
 
         # Find over data

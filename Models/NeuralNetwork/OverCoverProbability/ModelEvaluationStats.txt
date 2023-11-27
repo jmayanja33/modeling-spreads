@@ -3,15 +3,15 @@
         
 - Best Params: None
         
-- Training Accuracy: 0.4947021426889569
-- Training Precision: 0.3333333333333333
-- Training Recall: 0.0009328358208955224
-- Training F1 Score: 0.0018604651162790697
+- Training Accuracy: 0.49493760301389217
+- Training Precision: 0.0
+- Training Recall: 0.0
+- Training F1 Score: 0.0
         
-- Validation Accuracy: 0.5185714285714286
-- Validation Precision: 0.5
+- Validation Accuracy: 0.52
+- Validation Precision: 1.0
 - Validation Recall: 0.002967359050445104
-- Validation F1 Score: 0.0058997050147492625
+- Validation F1 Score: 0.005917159763313609
         
 - Test Accuracy: 0.5179340028694405
 - Test Precision: 0.0

@@ -19,6 +19,17 @@ def create_model_folder(model_type, dependent_variable):
     return dependent_variable_path
 
 
+def round_predictions(predictions):
+    """Functions to round softmax predictions for evaluation"""
+    rounded_predictions = []
+    for i in predictions:
+        if i[0] > i[1]:
+            rounded_predictions.append(0)
+        else:
+            rounded_predictions.append(1)
+    return rounded_predictions
+
+
 def calculate_adj_r2(r2, data):
     """
     Function to calculate adjusted r2
@@ -106,8 +117,11 @@ def calculate_performance_metrics_classification(model_type, dependent_variable,
     validation_predictions = model.predict(X_validation).round(decimals=0)
     test_predictions = model.predict(X_test).round(decimals=0)
 
+    train_predictions = round_predictions(train_predictions)
+    validation_predictions = round_predictions(validation_predictions)
+    test_predictions = round_predictions(test_predictions)
+
     # Calculate Accuracy
-    # TODO: Round predictions to a value of 0 or 1
     train_accuracy = accuracy_score(y_train, train_predictions)
     validation_accuracy = accuracy_score(y_validation, validation_predictions)
     test_accuracy = accuracy_score(y_test, test_predictions)
