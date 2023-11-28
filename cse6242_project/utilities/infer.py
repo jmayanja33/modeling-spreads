@@ -27,7 +27,17 @@ def get_predicted_score(team_name):
     )
     return rf_score_model.predict(weekly_ranking_data)[0]
 
+def get_tree_predictions(pipeline, input_vector):
+    """Returns the predictions from each tree in the ensemble given a single input vector."""
 
+    # Transform data through pipeline
+    X = pipeline.named_steps['scaler'].transform(input_vector)
+    X = pipeline.named_steps['pca'].transform(X)
+
+    # Call predict from each tree in the ensemble
+    predictions = [tree.predict(X)[0] for tree in pipeline.named_steps['rf'].estimators_]
+    
+    return predictions
 
 def get_week():
     col_idx = {
