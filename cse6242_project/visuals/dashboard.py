@@ -1,6 +1,5 @@
 import os
 
-import flask
 import pandas as pd
 import plotly.graph_objects as go
 import dash_bootstrap_components as dbc
@@ -9,6 +8,7 @@ from dash import Dash, html, dcc, callback, Output, Input
 
 from cse6242_project import PROJECT_ROOT
 from cse6242_project.utilities.infer import get_score_graph_data
+from cse6242_project.utilities import get_team_fullname
 
 
 DATA_DIR = os.path.join(PROJECT_ROOT, "data")
@@ -16,9 +16,8 @@ SCHEDULE_DATA = pd.read_csv(os.path.join(DATA_DIR, "2023_schedule.csv"))
 EXPANDED_DATA = pd.read_csv(os.path.join(DATA_DIR, "expanded_data.csv"))
 
 
-def create_fig(team1: str,
+def create_fig(label: str,
                team1_score: int,
-               team2: str,
                team2_score: float) -> Figure:
     """Example function to createa a gauge plot figure.
 
@@ -38,7 +37,7 @@ def create_fig(team1: str,
             mode="gauge+number",
             value=ratio,
             domain={"x": [0, 1], "y": [0, 1]},
-            title={"text": f"{team1}: {team1_score} | {team2}: {team2_score}", "font": {"size": 14}},
+            title={"text": label, "font": {"size": 18}},
             gauge={
                 "axis": {"range": [None, 1], "tickwidth": 1, "tickcolor": "black"},
                 "bar": {"color": "#a5d5d8" if team1_score < team2_score else "#f4777f"},
@@ -51,7 +50,6 @@ def create_fig(team1: str,
                 ],
             },
         ),
-        # go.Layout(height=400, width=400),
     )
     return fig
 
@@ -60,7 +58,7 @@ def create_fig(team1: str,
 df = pd.read_csv(os.path.join(DATA_DIR, "expanded_data.csv"))
 
 # Get array of current team
-current_teams = SCHEDULE_DATA.Teams.unique()
+current_teams = [*map(get_team_fullname, SCHEDULE_DATA.Teams.unique())]
 
 # create dropdown objects to select each team.
 team1_dropdown = html.Div(
@@ -68,7 +66,7 @@ team1_dropdown = html.Div(
         html.Label(
             "Select Your Team",
             htmlFor="team1-dropdown",
-            style={"font-weight": "bold", "text-align": "center"},
+            style={"margin": "auto", "font-weight": "bold", "textAlign": "center"},
         ),
         dcc.Dropdown(
             current_teams,
@@ -77,18 +75,16 @@ team1_dropdown = html.Div(
             style={"margin": "auto", "textAlign": "center"},
         ),
     ],
-    style={"margin": "auto", "width": "50%"},
+    style={"margin": "auto", "width": "200%"},
 )
 
 # initialize app. Include bootstrap libraries.
-server = flask.Flask(__name__)
 dashapp = Dash(
     __name__,
-    server=server,
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 
-gauge_size = 400
+gauge_size = 600
 # define the app layout
 dashapp.layout = html.Div(
     [
@@ -99,10 +95,9 @@ dashapp.layout = html.Div(
                     style={"textAlign": "center"},
                 ),
                 dbc.Row(
-                    [dbc.Col(team1_dropdown)],  # dbc.Col(team2_dropdown)],
+                    [dbc.Col(team1_dropdown)],
                     style={
                         "display": "flex",
-                        "align-items": "center",
                         "justify-content": "center",
                     },
                 ),
@@ -119,41 +114,10 @@ dashapp.layout = html.Div(
                                 "width": gauge_size,
                             },
                         ),
-                        dcc.Graph(
-                            id="graph-content2",
-                            style={
-                                "height": gauge_size,
-                                "width": gauge_size,
-                            },
-                        ),
                     ],
                     style={
                         "margin": "auto",
-                        "width": "50%",
-                    },
-                ),
-                dbc.Row(
-                    [
-                        dcc.Graph(
-                            id="graph-content3",
-                            style={
-                                "height": gauge_size,
-                                "width": gauge_size,
-                            },
-                        ),
-                        dcc.Graph(
-                            id="graph-content4",
-                            style={
-                                "height": gauge_size,
-                                "width": gauge_size,
-                            },
-                        ),
-                    ],
-                    style={
-                        "margin": "auto",
-                        "width": "50%",
-                        "margin-top": "1px",
-                        "margin-bottom": "1px",
+                        "width": "25%",
                     },
                 ),
             ],
@@ -174,8 +138,13 @@ To add a new graph to the dashboard:
 
 @callback(Output("graph-content1", "figure"), Input("team1-dropdown", "value"))
 def update_graph(team1: str):
-    team1, team1_score, team2, team2_score = get_score_graph_data(team1)
-    fig1 = create_fig(team1, int(team1_score), team2, int(team2_score))
+    model_output = get_score_graph_data(team1)
+    if model_output is not None:
+        team1, team1_score, team2, team2_score = model_output
+        label = f"{team1}: {int(team1_score)} | {team2}: {int(team2_score)}"
+    else:
+        label, team1_score, team2_score = (f'{team1} is on a BYE week', 1, 1)
+    fig1 = create_fig(label, int(team1_score), int(team2_score))
     return fig1
 
 
