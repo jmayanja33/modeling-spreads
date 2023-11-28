@@ -31,7 +31,7 @@ def get_predicted_score(team_name):
 
 def get_week():
     col_idx = {
-        datetime.strptime(c, "%m/%d/%y").date(): i
+        datetime.strptime(c, "%m/%d/%Y").date(): i
         for i, c in enumerate(SCHEDULE_DATA.columns.tolist()[1:])
     }
     today = datetime.now().date()
