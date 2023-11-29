@@ -90,9 +90,10 @@ def create_overlap_hist(team1_name, data1, team2_name, data2):
     # TODO Update figure layout
     # TODO x-label = predicted score
     # TODO y-label = count
-    fig.update_layout(barmode='overlay',
-                      title='Team Score Predictions'
-                      )
+    fig.update_layout(
+        barmode='overlay',
+        title='Team Score Predictions'
+    )
     
     # Reduce opacity to see both histograms
     fig.update_traces(opacity=0.75)
@@ -110,14 +111,14 @@ def create_spread_hist(data):
 
     return fig
 
-def create_single_hist(data):
+def create_single_hist(title, data):
     fig = go.Figure()
     fig.add_trace(go.Histogram(x=data))
 
     # TODO Update figure layout
     # TODO x-label = predicted score
     # TODO y-label = count
-    fig.update_layout(title="Predicted Total Score")
+    fig.update_layout(title=title)
 
     return fig
 
@@ -131,10 +132,6 @@ def create_feature_barchart(features, team1, data1, team2, data2):
     ])
     fig.update_layout(barmode='group')
     return fig
-
-
-# read in required data set
-df = pd.read_csv(os.path.join(DATA_DIR, "expanded_data.csv"))
 
 # Get array of current team
 current_teams = [*map(get_team_fullname, SCHEDULE_DATA.Teams.unique())]
@@ -160,51 +157,158 @@ team1_dropdown = html.Div(
 # initialize app. Include bootstrap libraries.
 dashapp = Dash(
     __name__,
+    #TODO Package bootstrap with assets
     external_stylesheets=[dbc.themes.BOOTSTRAP],
 )
 
 plot_width = 800
 plot_height = 400
+
 # define the app layout
 dashapp.layout = html.Div(
-    [
-        html.Div(
-            children=[
-                html.H1(
-                    children="Beat the Bookie",
-                    style={"textAlign": "center"},
+    children=[
+        html.H1("Beat The Bookie", className="text-center mt-4"),
+        dcc.Dropdown(
+            current_teams,
+            current_teams[0],
+            id="team1-dropdown",
+            className='mx-auto mt-4'
+        ), # End Dropdown
+        dbc.Row( # Begin Score Card Row
+            [
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([
+                            html.H4("", className='card-title', id='team1_card_title'),
+                            html.P("", className='card-info', id='team1_card_text'),
+                        ])
+                    ),
+                    className='mx-auto mt-4'
                 ),
-                dbc.Row(
-                    [dbc.Col(team1_dropdown)],
-                    style={
-                        "display": "flex",
-                        "justify-content": "center",
-                    },
+                dbc.Col(
+                    html.P("vs."),
+                    className='mx-auto mt-4'
+                ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([
+                            html.H4("", className='card-title', id='team2_card_title'),
+                            html.P("", className='card-info', id='team2_card_text'),
+                        ])
+                    ),
+                    className='mx-auto mt-4'
+                ),
+            ]
+        ), # End Score Card Row
+        dbc.Row( # Begin Total Score and Spread Row
+            [
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([
+                            html.H4("Predicted Total Score", className='card-title'),
+                            html.P("", className='card-info', id='total_score_card_text'),
+                        ])
+                    ),
+                    className='mx-auto mt-4'
+                ),
+                dbc.Col(
+                    dbc.Card(
+                        dbc.CardBody([
+                            html.H4("Predicted Spread", className='card-title', id='spread_card_title'),
+                            html.P("", className='card-info', id='spread_card_text'),
+                        ])
+                    ),
+                    className='mx-auto mt-4'
                 ),
             ]
         ),
-        html.Div(
-            children=[
-                dbc.Row(
-                    [
-                        dcc.Graph(
-                            id="graph-content1",
-                            style={
-                                "height": plot_height,
-                                "width": plot_width,
-                                "scale": "100%"
-                            },
-                        ),
-                    ],
-                    style={
-                        "margin": "auto",
-                        "width": "25%",
-                    },
+        # Begin Overlay Histogram
+        dbc.Row(
+            [
+                dbc.Col(
+                    dcc.Graph(id='overlap_hist'),
+                    className="mx-auto mt-4",
                 ),
-            ],
+            ]
+        ),
+        # Begin side by side hists
+        dbc.Row(
+            [
+                dbc.Col(
+                    dcc.Graph(id='total_score_hist'),
+                    className="mx-auto mt-4",
+                ),
+                dbc.Col(
+                    dcc.Graph(id='spread_hist'),
+                    className="mx-auto mt-4",
+                ),
+            ]
+        ),
+        # End side by side hists
+        # Begin Decisive Features
+        dbc.Row(
+            [
+                dbc.Col(
+                    dcc.Graph(id='features_barchart'),
+                    className="mx-auto mt-4",
+                ),
+            ]
         ),
     ]
 )
+
+# dashapp.layout = html.Div(
+#     [
+#         dbc.Row(
+#             html.Div(
+#                 children=[
+#                     html.H1(
+#                         children="Beat the Bookie",
+#                         style={"textAlign": "center"},
+#                     ),
+#                     dbc.Row(
+#                         [dbc.Col(team1_dropdown)],
+#                         style={
+#                             "display": "flex",
+#                             "justify-content": "center",
+#                         },
+#                     ),
+#                 ]
+#             )
+#         ),
+#         dbc.Row(
+#             children=[
+#                 dbc.Col(team1_card, className='mx-auto'),
+#                 dbc.Col(),
+#                 dbc.Col()
+#             ],
+#             className='mt-4'
+#         ),
+#         dbc.Row(
+#             html.Div(
+#                 children=[
+#                     dbc.Row(
+#                         [
+#                             dcc.Graph(
+#                                 id="graph-content1",
+#                                 style={
+#                                     "height": plot_height,
+#                                     "width": plot_width,
+#                                     "scale": "100%"
+#                                 },
+#                             ),
+#                         ],
+#                         style={
+#                             "margin": "auto",
+#                             "width": "25%",
+#                         },
+#                     ),
+#                 ],
+#             ),
+#         ),
+#     ],
+#     className='container'
+# )
 
 
 """
@@ -219,7 +323,21 @@ def get_team_stats(team_abbrv: str) -> pd.Series:
     return WEEKLY_STATS.loc[team_abbrv]
 
 
-@callback(Output("graph-content1", "figure"), Input("team1-dropdown", "value"))
+@callback(
+    [
+        Output('team1_card_title','children'), 
+        Output('team1_card_text','children'),
+        Output('team2_card_title','children'), 
+        Output('team2_card_text','children'),
+        Output('total_score_card_text','children'),
+        Output('spread_card_text','children'),
+        Output('overlap_hist','figure'),
+        Output('total_score_hist','figure'),
+        Output('spread_hist','figure'),
+        Output('features_barchart','figure'),
+    ], 
+    Input("team1-dropdown", "value")
+)
 def update_graph(team1: str):
     # Get team 1 stats
     team1_abbrv = get_team_abbrv(team1)
@@ -254,11 +372,11 @@ def update_graph(team1: str):
     ).to_frame().T
 
     # Get prediction and histogram data for team 1
-    team1_pred_score = MODEL.predict(team1_input_vector)[0]
+    team1_pred_score = round(MODEL.predict(team1_input_vector)[0])
     team1_tree_preds = get_tree_predictions(MODEL, team1_input_vector)
 
     # Get prediction and histogram data for team 2
-    team2_pred_score = MODEL.predict(team2_input_vector)[0]
+    team2_pred_score = round(MODEL.predict(team2_input_vector)[0])
     team2_tree_preds = get_tree_predictions(MODEL, team2_input_vector)
 
     # Compute total points and spread
@@ -269,7 +387,6 @@ def update_graph(team1: str):
     tree_df = pd.DataFrame({'team1_score': team1_tree_preds, 'team2_score': team2_tree_preds})
     tree_df['spread'] = tree_df['team1_score'] - tree_df['team2_score']
     tree_df['total_score'] = tree_df['team1_score'] + tree_df['team2_score']
-    tree_stats_df = tree_df.describe()
 
     # Get important features for each team to build vertical barchart
     feature_idx = np.argsort(MODEL.named_steps['rf'].feature_importances_)[::-1][:5]
@@ -281,35 +398,14 @@ def update_graph(team1: str):
     )
     team1_important_feature_values /= max_vals
     team2_important_feature_values /= max_vals
-    
-    # team1_important_feature_values['team'] = team1_abbrv
-    # team2_important_feature_values['team'] = team2_abbrv
-    # barchar_df = pd.concat([team1_important_feature_values, team2_important_feature_values])
 
     ### Gathering different widget outputs ###
-
-    # Build output for total points
-    #TODO
-
-    # Build output for spread
-    #TODO
-    
-    # Build histogram figures
-    #TODO
-
-    # Build output for histogram describes
-    #TODO
-
-    # Build output for feature importance barchart
-    #TODO
-
-    fig1 = create_overlap_hist(team1_abbrv, team1_tree_preds, team2_abbrv, team2_tree_preds)
-    fig1 = create_single_hist(tree_df['spread'])
-    fig1 = create_single_hist(tree_df['total_score'])
-    print(team1_important_feature_values.to_list())
-    fig1 = create_feature_barchart(important_feature_names, team1_abbrv, team1_important_feature_values.to_list(), team2_abbrv, team2_important_feature_values.to_list())
-    # fig1 = create_fig(f'{team1_abbrv} Score: {team1_pred_score} | {team2_abbrv} Score: {team2_pred_score}', int(team1_pred_score), int(team2_pred_score))
-    return fig1
+    overlap_hist = create_overlap_hist(team1_abbrv, team1_tree_preds, team2_abbrv, team2_tree_preds)
+    spread_hist = create_single_hist('Predicted Spread Distribution',tree_df['spread'])
+    total_score_hist = create_single_hist('Predicted Total Score Distribution',tree_df['total_score'])
+    features_barchart = create_feature_barchart(important_feature_names, team1_abbrv, team1_important_feature_values.to_list(), team2_abbrv, team2_important_feature_values.to_list())
+        
+    return team1_abbrv, team1_pred_score, team2_abbrv, team2_pred_score, total_points, spread, overlap_hist, total_score_hist, spread_hist, features_barchart
 
 
 def main():
