@@ -13,7 +13,7 @@ import joblib
 from cse6242_project import PROJECT_ROOT
 
 
-df = pd.read_csv(os.path.join(PROJECT_ROOT, "data", "training_data.csv"))
+df = pd.read_csv(os.path.join(PROJECT_ROOT, "data", "training_data_2.csv"))
 
 # Get features and labels from source dataset
 X = df.iloc[:, 5:]
@@ -23,8 +23,8 @@ y = df["score"]
 pipeline = Pipeline(
     [
         ("scaler", StandardScaler(with_mean=True, with_std=True)),
-        ("pca", PCA(n_components=30)),
-        ("rf", RandomForestRegressor(max_depth=10, n_estimators=500)),
+        # ("pca", PCA(n_components=20)),
+        ("rf", RandomForestRegressor(max_depth=5, n_estimators=500)),
     ]
 )
 
@@ -46,4 +46,4 @@ print(f"Mean Absolute Error: {mae}")
 print(f"Mean Squared Error: {mse}")
 print(f"R-squared: {r2}")
 
-joblib.dump(pipeline, os.path.join(PROJECT_ROOT, "models", "rf_regressor_pipeline.pkl"), compress=9)
+joblib.dump(pipeline, os.path.join(PROJECT_ROOT, "models", "rf_regressor_pipeline3.pkl"), compress=9)
