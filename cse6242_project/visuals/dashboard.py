@@ -236,11 +236,11 @@ dashapp.layout = html.Div(
             [
                 dbc.Col(
                     dcc.Graph(id='total_score_hist'),
-                    className="mx-auto mt-4",
+                    className="col-md-6",
                 ),
                 dbc.Col(
                     dcc.Graph(id='spread_hist'),
-                    className="mx-auto mt-4",
+                    className="col-md-6",
                 ),
             ]
         ),
@@ -348,7 +348,7 @@ def update_graph(team1: str):
 
     if team2_abbrv == "BYE":
         # Bye week logic
-        return create_fig(f'{team1} has a BYE week', 0, 1)
+        return team1_abbrv, 0, team2_abbrv, 0, 0, 0, go.Figure(),go.Figure(),go.Figure(),go.Figure()
 
     # Get team 2 stats
     team2_stats = get_team_stats(team2_abbrv)
