@@ -28,7 +28,7 @@ config = {
     "description": "Bet smarter, beat the bookie.",
     "include_package_data": True,
     "entry_points": {
-        "console_scripts": ["betting_app_start=cse6242_project.app:run_cli"]
+        "console_scripts": ["start-beating-the-bookie=cse6242_project.app:run_cli"]
     },
 }
 
