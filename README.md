@@ -49,7 +49,7 @@ pip install .
 Start dashboard application.
 
 ```bash
-start-beat-the-bookie
+start-beating-the-bookie
 ```
 
 You can specify host and port using --host \<str> and --port \<int>.
