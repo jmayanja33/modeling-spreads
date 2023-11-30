@@ -94,7 +94,7 @@ def create_overlap_hist(team1_name, data1, team2_name, data2):
         yaxis_title='Count',
         title_x=0.5,
     )
-    
+
     # Reduce opacity to see both histograms
     fig.update_traces(opacity=0.75)
 
@@ -205,7 +205,9 @@ dashapp.layout = html.Div(
                 ),
                 dbc.Col(
                     html.P("vs."),
-                    className='mx-auto mt-4'
+                    className='mx-auto mt-4',
+                    id="versus-sign",
+                    style={'font-size': '40px',  'text-align': 'center', 'height': '100px'}
                 ),
                 dbc.Col(
                     dbc.Card(
@@ -348,9 +350,9 @@ def get_team_stats(team_abbrv: str) -> pd.Series:
 
 @callback(
     [
-        Output('team1_card_title','children'), 
+        Output('team1_card_title','children'),
         Output('team1_card_text','children'),
-        Output('team2_card_title','children'), 
+        Output('team2_card_title','children'),
         Output('team2_card_text','children'),
         Output('total_score_card_text','children'),
         Output('spread_card_text','children'),
@@ -358,7 +360,9 @@ def get_team_stats(team_abbrv: str) -> pd.Series:
         Output('total_score_hist','figure'),
         Output('spread_hist','figure'),
         Output('features_barchart','figure'),
-    ], 
+        Output('versus-sign','children'),
+
+    ],
     Input("team1-dropdown", "value")
 )
 def update_graph(team1: str):
@@ -371,7 +375,7 @@ def update_graph(team1: str):
 
     if team2_abbrv == "BYE":
         # Bye week logic
-        return team1_abbrv, 0, team2_abbrv, 0, 0, 0, go.Figure(),go.Figure(),go.Figure(),go.Figure()
+        return team1_abbrv, 0, 'None', 0, 0, 0, go.Figure(),go.Figure(),go.Figure(),go.Figure(), 'BYE Week'
 
     # Get team 2 stats
     team2_stats = get_team_stats(team2_abbrv)
@@ -428,7 +432,9 @@ def update_graph(team1: str):
     total_score_hist = create_total_score_hist(tree_df['total_score'])
     features_barchart = create_feature_barchart(important_feature_names, team1_abbrv, team1_important_feature_values.to_list(), team2_abbrv, team2_important_feature_values.to_list())
 
-    return team1_abbrv, team1_pred_score, team2_abbrv, team2_pred_score, total_points, spread, overlap_hist, total_score_hist, spread_hist, features_barchart
+    versus_sign = 'vs.' if team1_stats.is_home else '@'
+
+    return team1_abbrv, team1_pred_score, team2_abbrv, team2_pred_score, total_points, spread, overlap_hist, total_score_hist, spread_hist, features_barchart, versus_sign
 
 
 def main():
