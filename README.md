@@ -66,7 +66,7 @@ start-beating-the-bookie --host 0.0.0.0 --port 9000
 [MIT](https://choosealicense.com/licenses/mit/)
 
 ## Authors and acknowledgment
-Joshua McLennan
+Joshua McLennan Mayanja
 
 Aditya Thakur
 
