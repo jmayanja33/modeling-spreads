@@ -1,0 +1,3 @@
+recursive-include cse6242_project/data *.csv
+recursive-include cse6242_project/models *.pkl
+recursive-exclude cse6242_project/model_training *
