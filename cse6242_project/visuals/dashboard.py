@@ -93,6 +93,8 @@ def create_overlap_hist(team1_name, data1, team2_name, data2):
         xaxis_title='Predicted Score',
         yaxis_title='Count',
         title_x=0.5,
+        title_y=0.9,
+        font_size=30,
     )
 
     # Reduce opacity to see both histograms
@@ -108,6 +110,8 @@ def create_spread_hist(data):
         xaxis_title='Spread',
         yaxis_title='Count',
         title_x=0.5,
+        title_y=0.9,
+        font_size=20,
     )
     return fig
 
@@ -119,6 +123,8 @@ def create_total_score_hist(data):
         xaxis_title='Total Score',
         yaxis_title='Count',
         title_x=0.5,
+        title_y=0.9,
+        font_size=20,
     )
     return fig
 
@@ -136,6 +142,10 @@ def create_feature_barchart(features, team1, data1, team2, data2):
         xaxis_title='Feature',
         yaxis_title='Relative Performance',
         title_x=0.5,
+        title_font_size=40,
+        yaxis_title_font_size=30,
+        xaxis_title_font_size=30,
+        xaxis_tickfont_size=20
     )
     return fig
 
@@ -173,7 +183,7 @@ plot_height = 400
 # define the app layout
 dashapp.layout = html.Div(
     children=[
-        html.H1("Beat The Bookie", className="text-center mt-4"),
+        html.H1("Beat The Bookie", className="text-center mt-4", style={'font-size': 60}),
         dbc.Row(
             [
                 dbc.Col(),
@@ -183,8 +193,8 @@ dashapp.layout = html.Div(
                         current_teams[0],
                         id="team1-dropdown",
                         className='mx-auto mt-4',
-                        style={'textAlign': 'center'},
-                        clearable=False
+                        style={'textAlign': 'center', 'font-size': 20},
+                        clearable=False,
                     ), # End Dropdown
                 ),
                 dbc.Col()
@@ -192,11 +202,12 @@ dashapp.layout = html.Div(
         ),
         dbc.Row( # Begin Score Card Row
             [
+                dbc.Col(),
                 dbc.Col(
                     dbc.Card(
                         dbc.CardBody([
-                            html.H4("", className='card-title', id='team1_card_title'),
-                            html.P("", className='card-info', id='team1_card_text'),
+                            html.H4("", className='card-title', id='team1_card_title', style={'font-size': 40}),
+                            html.P("", className='card-info', id='team1_card_text', style={'font-size': 40}),
                         ]),
                         className='card text-center',
                         id='team1-card'
@@ -205,21 +216,22 @@ dashapp.layout = html.Div(
                 ),
                 dbc.Col(
                     html.P("vs."),
-                    className='mx-auto mt-4',
+                    className='my-auto',
                     id="versus-sign",
-                    style={'font-size': '40px',  'text-align': 'center', 'height': '100px'}
+                    style={'font-size': '50px',  'text-align': 'center', 'height': '100px'}
                 ),
                 dbc.Col(
                     dbc.Card(
                         dbc.CardBody([
-                            html.H4("", className='card-title', id='team2_card_title'),
-                            html.P("", className='card-info', id='team2_card_text'),
+                            html.H4("", className='card-title', id='team2_card_title', style={'font-size': 40}),
+                            html.P("", className='card-info', id='team2_card_text', style={'font-size': 40}),
                         ]),
                         className='card text-center',
                         id='team2-card'
                     ),
                     className='mx-auto mt-4'
                 ),
+                dbc.Col(),
             ]
         ), # End Score Card Row
         dbc.Row( # Begin Total Score and Spread Row
@@ -227,8 +239,8 @@ dashapp.layout = html.Div(
                 dbc.Col(
                     dbc.Card(
                         dbc.CardBody([
-                            html.H4("Predicted Total Score", className='card-title'),
-                            html.P("", className='card-info', id='total_score_card_text'),
+                            html.H4("Predicted Total Score", className='card-title', style={'font-size': 40}),
+                            html.P("", className='card-info', id='total_score_card_text', style={'font-size': 40}),
                         ]),
                         className='card text-center'
                     ),
@@ -237,8 +249,8 @@ dashapp.layout = html.Div(
                 dbc.Col(
                     dbc.Card(
                         dbc.CardBody([
-                            html.H4("Predicted Spread", className='card-title', id='spread_card_title'),
-                            html.P("", className='card-info', id='spread_card_text'),
+                            html.H4("Predicted Spread", className='card-title', id='spread_card_title', style={'font-size': 40}),
+                            html.P("", className='card-info', id='spread_card_text', style={'font-size': 40}),
                         ]),
                         className='card text-center'
                     ),
