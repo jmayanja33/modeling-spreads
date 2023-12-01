@@ -4,7 +4,7 @@ Project Description
 cse6242_project is a Python library for helping you make smarter, more informed NFL bets.
 Once started, the dashboard will allow you to select a team from a dropdown list a the top of the page.
 The predicted score for the selected team, and the opponent team will be predicted using a random forest.
-The team scores are displayed, along with the total score, spread, and distrobution of predictions provided by the model.
+The team scores are displayed, along with the total score, spread, and distribution of predictions provided by the model.
 The most decisive team stats for the predictions are displayed in a side-by-side bar chart for easy comparison.
 All of this information displayed at your fingertips will help you make more informed betting decisions and help you beat the bookie.
 
