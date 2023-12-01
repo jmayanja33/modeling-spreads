@@ -4,7 +4,7 @@ you can check your python version using:
 python -V
 ```
 
-# cse6242_project
+# cse6242_project (Beat the Bookie)
 
 cse6242_project is a Python library for helping you make smarter, more informed NFL bets.
 Once started, the dashboard will allow you to select a team from a dropdown list a the top of the page.
@@ -26,7 +26,7 @@ Linux:
 source ./venv/bin/activate
 ```
 
-Windows Powershell (gross):
+Windows Powershell:
 
 ```powershell
 .\venv\Scripts\Activate.ps1
