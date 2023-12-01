@@ -18,7 +18,7 @@ Highly recommended to use a [virtual environment](https://docs.python.org/3/libr
 
 ```bash
 python -m venv venv
-\venv\Scripts\activate
+venv\Scripts\activate
 ```
 Source your environment using the appropriate setup script.
 
