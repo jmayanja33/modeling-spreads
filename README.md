@@ -61,6 +61,19 @@ Default port: 8000
 start-beating-the-bookie --host 0.0.0.0 --port 9000
 ```
 
+## Troubleshooting
+**Note:** If you are experiencing issues building wheels on MacOS for python-snappy during the ```bash pip install .``` step, make sure to:
+1) Update pip:
+```bash
+pip install --upgrade pip
+```
+2) Install snappy using [homebrew](https://brew.sh/):
+```bash
+brew install snappy  
+CPPFLAGS="-I/usr/local/include -L/usr/local/lib" pip install python-snappy
+```
+3) Once done, you should be able to return to the "Usage" section to begin launching the app.
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
